@@ -1,0 +1,200 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "go-grpc-mongo/proto";
+
+// Define el servicio gRPC
+service PersonasService {
+  rpc GetProyectos (GetProyectosRequest) returns (GetProyectosResponse);
+  rpc GetTickets (GetTicketsRequest) returns (GetTicketsResponse);
+  rpc GetPersonas (GetPersonasRequest) returns (GetPersonasResponse);
+  rpc GetPersonasByAgeRange (GetPersonasByAgeRangeRequest) returns (GetPersonasResponse);
+  rpc GetPersonasPorNumeroDeTicket (GetPersonasPorNumeroDeTicketRequest) returns (GetPersonasResponse);
+  rpc GetPersonaByNombre (GetPersonaByNombreRequest) returns (PersonaResponse);
+  rpc GetTicketPorNumero (GetTicketPorNumeroRequest) returns (TicketResponse);
+  rpc GetTicketPorDueno (GetTicketPorDuenoRequest) returns (TicketResponse);
+  rpc GetProyectoPorColaborador (GetProyectoPorColaboradorRequest) returns (ProyectoResponse);
+  rpc GetColaboradoresPorProyecto(GetColaboradoresPorProyectoRequest) returns (GetColaboradoresPorProyectoResponse);
+}
+
+
+service CreateService {
+  // Métodos para editar personas
+  rpc CreatePersona (CreatePersonaRequest) returns (CreatePersonaResponse);
+  rpc UpdatePersona (UpdatePersonaRequest) returns (UpdatePersonaResponse);
+  rpc DeletePersona (DeletePersonaRequest) returns (DeletePersonaResponse);
+
+  // Métodos para editar tickets
+  rpc CreateTicket (CreateTicketRequest) returns (CreateTicketResponse);
+  rpc UpdateTicket (UpdateTicketRequest) returns (google.protobuf.Empty);
+  rpc DeleteTicket (DeleteTicketRequest) returns (google.protobuf.Empty);
+
+  // Metodos para editar proyectos
+  rpc CreateProyecto (CreateProyectoRequest) returns (CreateProyectoResponse);
+  rpc UpdateProyecto (UpdateProyectoRequest) returns (google.protobuf.Empty);
+  rpc DeleteProyecto (DeleteProyectoRequest) returns (google.protobuf.Empty);
+}
+
+// Mensajes de solicitud y respuesta para el servicio CreateService
+message CreatePersonaRequest {
+  string nombre = 1;
+  int32 edad = 2;
+  repeated int32 tickets = 3;
+  string proyecto = 4;
+}
+
+message CreatePersonaResponse {
+  string id = 1;
+}
+
+message UpdatePersonaRequest {
+  string id = 1;
+  string nombre = 2;
+  int32 edad = 3;
+  repeated int32 tickets = 4;
+  string proyecto = 5;
+}
+
+message UpdatePersonaResponse {
+  bool success = 1;
+}
+
+message DeletePersonaRequest {
+  string id = 1;
+}
+
+message DeletePersonaResponse {
+  bool success = 1;
+}
+
+// Mensajes para tickets
+message CreateTicketRequest {
+  int32 ticket_numero = 1;
+  string owner = 2;
+}
+
+message CreateTicketResponse {
+  string id = 1;
+}
+
+message UpdateTicketRequest {
+  string id = 1;
+  int32 ticket_numero = 2;
+  string owner = 3;
+}
+
+message DeleteTicketRequest {
+  string id = 1;
+}
+
+// Mensajes para proyectos
+message CreateProyectoRequest {
+  string nombre = 1;
+  repeated string colaboradores = 2;
+  string nivel_dificultad = 3;
+}
+
+message CreateProyectoResponse {
+  string id = 1;
+}
+
+message UpdateProyectoRequest {
+  string id = 1;
+  string nombre = 2;
+  repeated string colaboradores = 3;
+  string nivel_dificultad = 4;
+}
+
+message DeleteProyectoRequest {
+  string id = 1;
+}
+
+// Mensaje vacío para llamadas que no requieren parámetros
+message GetPersonasRequest {}
+
+message GetTicketsRequest {}
+
+message GetProyectosRequest {}
+// Solicitudes y respuestas para cada uno de los métodos
+message GetPersonasByAgeRangeRequest {
+  int32 edadMinima = 1;
+  int32 edadMaxima = 2;
+}
+
+message GetTicketPorNumeroRequest {
+  int32 ticket_numero = 1;
+}
+
+message GetPersonasPorNumeroDeTicketRequest {
+    int32 ticket_numero = 1;
+  }
+
+message GetPersonaByNombreRequest {
+  string nombre = 1;
+}
+
+message GetTicketPorDuenoRequest {
+  string dueno = 1;
+}
+
+message GetProyectoPorColaboradorRequest {
+  string colaborador = 1;
+}
+
+message Persona {
+    string id = 1; // ID de la persona
+    string nombre = 2;
+    int32 edad = 3;
+    repeated int32 tickets = 4; // Lista de tickets
+    string proyecto = 5; // Lista de proyectos
+  }
+  
+message Ticket {
+    string id = 1; // ID del ticket
+    int32 ticket_numero = 2; // Número de ticket
+    string owner = 3; // Propietario del ticket
+  }
+
+message Proyecto {
+    string id = 1; // ID del proyecto
+    string nombre = 2; // Nombre del proyecto
+    repeated string colaboradores = 3; // Colaboradores en el proyecto
+    string nivel_dificultad = 4; // Nivel de dificultad del proyecto
+  }
+
+message GetPersonasResponse {
+  repeated Persona personas = 1;
+}
+
+message GetTicketsResponse {
+  repeated Ticket tickets = 1;
+}
+
+message GetProyectosResponse {
+  repeated Proyecto proyectos = 1;
+}
+
+message PersonaResponse {
+  Persona persona = 1;
+}
+
+message TicketResponse {
+  Ticket ticket = 1;
+}
+
+message ProyectoResponse {
+  Proyecto proyecto = 1;
+}
+
+// Mensaje de solicitud para obtener colaboradores por nombre de proyecto
+message GetColaboradoresPorProyectoRequest {
+  string nombre_proyecto = 1;
+}
+
+// Mensaje de respuesta con la lista de colaboradores
+message GetColaboradoresPorProyectoResponse {
+  repeated string colaboradores = 1;
+}

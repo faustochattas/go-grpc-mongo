@@ -1,0 +1,23 @@
+services:
+  grpc_server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "50051:50051"  # Exponer el puerto 50051 para el servidor gRPC
+    depends_on:
+      - mongodb  # Asegurarse de que MongoDB esté en funcionamiento antes de iniciar el servidor gRPC
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/argentina_office  # URI de conexión a MongoDB
+
+  mongodb:
+    image: mongo  # Usar la imagen oficial de MongoDB
+    ports:
+      - "27017:27017"  # Exponer el puerto 27017 para MongoDB
+    volumes:
+      - mongo_data:/data/db  # Monta el volumen en el directorio de datos de MongoDB para persistencia
+
+# Definición del volumen para persistencia
+volumes:
+  mongo_data:
+    driver: local
