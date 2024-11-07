@@ -1,76 +1,80 @@
-# Proyecto Go gRPC con MongoDB
+# Go gRPC Project with MongoDB
 
-Este proyecto implementa un servicio gRPC en Go conectado a MongoDB. A continuación, se detallan los pasos necesarios para configurar el entorno de desarrollo local usando Docker y ejecutar las llamadas gRPC.
-
----
-
-## Requisitos previos
-
-1. **Instalar Docker y Docker Desktop**  
-   Puedes seguir los pasos [aquí](https://docs.docker.com/get-docker/) para instalar Docker.
-   Problemas con docker? [Instalalo asi](#having-trouble-with-docker-install-it-this-way)
-
-2. **Instalar gRPCurl**  
-   Herramienta para realizar llamadas a los servicios gRPC. Puedes instalarla desde [grpc.io](https://github.com/fullstorydev/grpcurl).
-
-3. **Clonar el repositorio**  
-   Clona este repositorio en tu máquina local.
+This project implements a gRPC service in Go connected to MongoDB. Below are the steps needed to set up the local development environment using Docker and execute gRPC calls.
 
 ---
 
-## Configuración y Ejecución
+## Prerequisites
 
-### Paso 1: Verificar Puertos
+1. **Install Docker and Docker Desktop**  
+   You can follow the steps [here](https://docs.docker.com/get-docker/) to install Docker.
+   Having trouble with Docker? [Install it this way](#having-trouble-with-docker-install-it-this-way)
 
-Asegúrate de que los puertos 50051 (para gRPC) y 27017 (para MongoDB) estén disponibles, ya que se utilizarán en este proyecto.
+2. **Install gRPCurl**  
+   Tool to make calls to gRPC services. You can install it from [grpc.io](https://github.com/fullstorydev/grpcurl).
 
-- **Puertos utilizados**:
-  - `0.0.0.0:50051->50051/tcp`: Servidor gRPC.
+3. **Clone the repository**  
+   Clone this repository to your local machine.
+
+---
+
+## Setup and Execution
+
+### Step 1: Check Ports
+
+Make sure that ports 50051 (for gRPC) and 27017 (for MongoDB) are available, as they will be used in this project.
+
+- **Ports used**:
+  - `0.0.0.0:50051->50051/tcp`: gRPC Server.
   - `0.0.0.0:27017->27017/tcp`: MongoDB.
 
-Para ver los puertos que están actualmente en uso, ejecuta:
+To check the ports currently in use, run:
 
 ```bash
 docker ps
 ```
 
-### Paso 2: Ejecutar el Proyecto con Docker
+### Step 2: Run the Project with Docker
 
-1. **Abrir Docker Desktop** y asegúrate de que Docker esté ejecutándose.
-2. **Construir y levantar el contenedor**
-   Desde la raíz del proyecto, ejecuta:
-   ```bash
+1. **Open Docker Desktop** make sure Docker is running.
+2. **Build and start the container**  
+   From the project root, run:
+
+```bash
    docker compose up --build
-   ```
-   Nota: La primera ejecución puede tardar unos minutos.
+```
 
-Abre una nueva terminal y ejecuta:
+Note: The first run may take a few minutes.
+
+Open a new terminal and run:
 
 ```bash
 docker ps
 ```
 
-Esto permite confirmar que los contenedores están corriendo en los puertos correctos.
+This allows you to confirm that the containers are running on the correct ports.
 
-### Paso 3: Conectar a MongoDB
+### Step 3: Connect to MongoDB
 
-Para interactuar directamente con MongoDB:
+To interact directly with MongoDB:
 
-1. Ejecuta:
-   ```bash
-   docker exec -it <nombre_contenedor_mongo> mongosh
-   ```
-   Ejemplo: docker exec -it go-grpc-mongo-mongodb-1 mongosh
-
-Una vez dentro del CLI de MongoDB, selecciona la base de datos:
+1. Run:
 
 ```bash
-use argentina_office
+   docker exec -it <mongo_container_name> mongosh
 ```
 
-Crear la base de datos y poblarla usando el siguiente script:
+Example: docker exec -it go-grpc-mongo-mongodb-1 mongosh
 
-Copia y pega el script en MongoDB para inicializar la base de datos localmente.
+Once inside the MongoDB CLI, select the database:
+
+```bash
+   use argentina_office
+```
+
+Create the database and populate it using the following script:
+
+Copy and paste the script into MongoDB to initialize the database locally.
 
 ```javascript
 use argentina_office
@@ -254,9 +258,9 @@ db.proyectos.insertMany([
 ])
 ```
 
-### Visualización de la Base de Datos
+### Database Visualization
 
-Ya puedes ver tu base de datos. Usa los siguientes comandos en el CLI de MongoDB:
+You can now view your database. Use the following commands in the MongoDB CLI:
 
 ```javascript
 show collections
@@ -265,89 +269,87 @@ db.tickets.find().pretty()
 db.proyectos.find().pretty()
 ```
 
-Si prefieres una visualización más organizada, utiliza la extensión MongoDB en Visual Studio Code.
+If you prefer a more organized visualization, use the MongoDB extension in Visual Studio Code.
 
-### Paso 4:
+### Step 4:
 
-1. Abre otra terminal.
-2. Realiza las gRPC calls que necesites.
+1. Open another terminal.
+2. Make any gRPC calls you need.
 
 ---
 
 ### gRPC Calls
 
-Muestra todos los proyectos
+Show all projects
 
 ```bash
 grpcurl -plaintext -d '{}' localhost:50051 pb.PersonasService/GetProyectos
 ```
 
-Muestra todos los tickets
+Show all tickets
 
 ```bash
 grpcurl -plaintext -d '{}' localhost:50051 pb.PersonasService/GetTickets
 ```
 
-Muestra todas las personas
+Show all people
 
 ```bash
 grpcurl -plaintext -d '{}' localhost:50051 pb.PersonasService/GetPersonas
 ```
 
-Muestra personas que estén dentro del rango de edad pedido
+Show people within the specified age range
 
 ```bash
 grpcurl -plaintext -d '{"edadMinima": 20, "edadMaxima": 30}' localhost:50051 pb.PersonasService/GetPersonasByAgeRange
 ```
 
-Muestra la persona que contenga el ticket pedido
+Show the person who has the specified ticket
 
 ```bash
 grpcurl -plaintext -d '{"ticket_numero": 108}' localhost:50051 pb.PersonasService/GetPersonasPorNumeroDeTicket
 ```
 
-Muestra la persona que tenga el nombre pedido
+Show the person with the specified name
 
 ```bash
 grpcurl -plaintext -d '{"nombre": "Juan"}' localhost:50051 pb.PersonasService/GetPersonaByNombre
 ```
 
-Muestra el ticket buscando por el número de ticket pedido
+Show the ticket with the specified ticket number
 
 ```bash
 grpcurl -plaintext -d '{"ticket_numero": 113}' localhost:50051 pb.PersonasService/GetTicketPorNumero
 ```
 
-Muestra los tickets que pertenezcan al owner pedido
+Show tickets belonging to the specified owner
 
 ```bash
 grpcurl -plaintext -d '{"dueno": "Carlos"}' localhost:50051 pb.PersonasService/GetTicketPorDueno
 ```
 
-Muestra el proyecto en el que el colaborador trabaja
+Show the project in which the specified collaborator works
 
 ```bash
 grpcurl -plaintext -d '{"colaborador": "Ricardo"}' localhost:50051 pb.PersonasService/GetProyectoPorColaborador
 ```
 
-Muestra todos los colaboradores del proyecto pedido
+Show all collaborators of the specified project
 
 ```bash
 grpcurl -plaintext -d '{"nombre_proyecto": "proyecto delta"}' localhost:50051 pb.PersonasService/GetColaboradoresPorProyecto
 ```
 
----
-
-Servicios posibles de gRPC: List services
+Possible gRPC services: List services
 
 ```bash
 grpcurl -plaintext localhost:50051 list
 ```
 
-Listar métodos de un servicio en particular: List methods from a service
+List methods of a specific service
 
 ```bash
-grpcurl -plaintext localhost:50051 list pb.(nombreDeServicio)
+grpcurl -plaintext localhost:50051 list pb.(ServiceName)
 ```
 
 ---
@@ -355,8 +357,8 @@ grpcurl -plaintext localhost:50051 list pb.(nombreDeServicio)
 ## CRUD CALLS
 
 (Create, update and delete the db, personas, tickets y proyectos)
-Edita sus datos a eleccion,
-Ejmplos:
+Edit the data as desired,  
+Examples:
 
 #### CREATE PERSONA
 
@@ -373,7 +375,7 @@ grpcurl -plaintext -d '{
 
 ```bash
 grpcurl -plaintext -d '{
-"id": "<ID_DE_PERSONA>",
+"id": "<ID_PERSONA>",
 "nombre": "Fausto Chattas Updated",
 "edad": 22,
 "tickets": [200, 204],
@@ -385,7 +387,7 @@ grpcurl -plaintext -d '{
 
 ```bash
 grpcurl -plaintext -d '{
-"id": "<ID_DE_PERSONA>"
+"id": "<ID_PERSONA>"
 }' localhost:50051 pb.CreateService/DeletePersona
 ```
 
@@ -404,7 +406,7 @@ grpcurl -plaintext -d '{
 
 ```bash
 grpcurl -plaintext -d '{
-"id": "<ID_DEL_TICKET>", // Reemplaza con el ID del ticket
+"id": "<ID_TICKET>", // Reemplaza con el ID del ticket
 "ticket_numero": 302,
 "owner": "Fausto Chattas"
 }' localhost:50051 pb.CreateService/UpdateTicket
@@ -414,7 +416,7 @@ grpcurl -plaintext -d '{
 
 ```bash
 grpcurl -plaintext -d '{
-"id": "<ID_DEL_TICKET>" // Reemplaza con el ID del ticket
+"id": "<ID_TICKET>" // Reemplaza con el ID del ticket
 }' localhost:50051 pb.CreateService/DeleteTicket
 ```
 
@@ -434,7 +436,7 @@ grpcurl -plaintext -d '{
 
 ```bash
 grpcurl -plaintext -d '{
-"id": "<ID_DEL_PROYECTO>",
+"id": "<ID_PROYECTO>",
 "nombre": "Proyecto Actualizado",
 "colaboradores": ["Fausto", "Octavio"],
 "nivel_dificultad": "alto"
@@ -445,7 +447,7 @@ grpcurl -plaintext -d '{
 
 ```bash
 grpcurl -plaintext -d '{
-"id": "<ID_DEL_PROYECTO>"
+"id": "<ID_PROYECTO>"
 }' localhost:50051 pb.CreateService/DeleteProyecto
 ```
 
