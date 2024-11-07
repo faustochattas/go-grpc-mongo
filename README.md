@@ -456,10 +456,12 @@ grpcurl -plaintext -d '{
 Install from the command line
 After downloading Docker.dmg from either the download buttons at the top of the page or from the release notes, run the following commands in a terminal to install Docker Desktop in the Applications folder:
 
+```bash
 $ sudo hdiutil attach Docker.dmg
 
 $ sudo /Volumes/Docker/Docker.app/Contents/MacOS/install
 
 $ sudo hdiutil detach /Volumes/Docker
+```
 
 By default, Docker Desktop is installed at /Applications/Docker.app. As macOS typically performs security checks the first time an application is used, the install command can take several minutes to run.
