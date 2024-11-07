@@ -8,7 +8,7 @@ Este proyecto implementa un servicio gRPC en Go conectado a MongoDB. A continuac
 
 1. **Instalar Docker y Docker Desktop**  
    Puedes seguir los pasos [aquí](https://docs.docker.com/get-docker/) para instalar Docker.
-   Problemas con docker? [Instalalo asi](#HAVING TROUBLE WITH DOCKER? INSTALL IT THIS WAY)
+   Problemas con docker? [Instalalo asi](#having-trouble-with-docker-install-it-this-way)
 
 2. **Instalar gRPCurl**  
    Herramienta para realizar llamadas a los servicios gRPC. Puedes instalarla desde [grpc.io](https://github.com/fullstorydev/grpcurl).
@@ -451,7 +451,7 @@ grpcurl -plaintext -d '{
 
 —-------------------------------
 
-## HAVING TROUBLE WITH DOCKER? INSTALL IT THIS WAY
+### HAVING TROUBLE WITH DOCKER? INSTALL IT THIS WAY
 
 Install from the command line
 After downloading Docker.dmg from either the download buttons at the top of the page or from the release notes, run the following commands in a terminal to install Docker Desktop in the Applications folder:
